@@ -17,7 +17,7 @@ DOCKER_CONTAINER_NAME='flask_jwt_tutorial_1'
 
 $DOCKER pull $DOCKER_BASE_IMAGE
 
-$DOCKER build $GIT_REPO_ROOT/src \
+$DOCKER build $GIT_REPO_ROOT/conf \
     --tag $DOCKER_IMAGE_NAME
 
 CONTAINER_EXISTS=$($DOCKER ps -a --format '{{ .Names }}' --filter name=$DOCKER_CONTAINER_NAME)
@@ -31,4 +31,5 @@ $DOCKER run \
     --name $DOCKER_CONTAINER_NAME \
     --network=host \
     --volume=$(pwd):/app \
+    --volume=$GIT_REPO_ROOT/src:/src \
     -itd $DOCKER_IMAGE_NAME
