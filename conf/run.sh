@@ -31,5 +31,5 @@ $DOCKER run \
     --name $DOCKER_CONTAINER_NAME \
     --network=host \
     --volume=$(pwd):/app \
-    --volume=$GIT_REPO_ROOT/src:/src \
+    --volume=$GIT_REPO_ROOT/src:/root \
     -itd $DOCKER_IMAGE_NAME

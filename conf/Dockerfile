@@ -17,11 +17,6 @@ RUN apt-get install -y ca-certificates
 RUN apt-get install -y gnupg
 RUN apt-get install -y lsb-core
 
-# Install Python dependencies.
-RUN apt-get install -y python3
-RUN apt-get install -y python3-pip
-RUN apt-get install -y python3-venv
-
 # Install PostgreSQL 12.x from PostgreSQL .deb package archive. Copied from
 # 'github.com/yingw787/tinydevcrm-mvp'. Comments have been truncated.
 RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add -
@@ -37,5 +32,28 @@ RUN apt-get install -y postgresql-12
 RUN apt-get install -y postgresql-client-12
 RUN apt-get install -y postgresql-contrib-12
 RUN apt-get install -y postgresql-server-dev-12
+
+# Install Python backend.
+RUN apt-get install -y python3
+RUN apt-get install -y python3-pip
+RUN apt-get install -y python3-venv
+
+# Install persisted dependencies in venv at '/root/env'.
+#
+# NOTE: Must take place as one context since runtime context isn't preserved
+# across different Docker build layers.
+#
+# NOTE: For some reason, the Docker volume isn't available at Docker build time.
+# I also don't know how to copy a file outside of the directory of the
+# Dockerfile to the container within the Dockerfile itself (i.e. not using
+# `docker cp`). So I copied src/requirements.txt to conf/requirements.txt. This
+# means that if requirements.txt change on host, it needs to be manually updated
+# in this directory.
+COPY requirements.txt /root
+
+RUN python3.6 -m venv ${HOME}/env && \
+    . ${HOME}/env/bin/activate && \
+    pip3 install wheel && \
+    pip3 install -r /root/requirements.txt
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
