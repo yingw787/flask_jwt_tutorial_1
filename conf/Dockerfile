@@ -56,4 +56,28 @@ RUN python3.6 -m venv ${HOME}/env && \
     pip3 install wheel && \
     pip3 install -r /root/requirements.txt
 
+# Configure PostgreSQL. Copied from 'github.com/yingw787/tinydevcrm-mvp'.
+# Comments have been truncated.
+RUN apt-get install -y sudo
+
+RUN service postgresql start && \
+    sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
+
+# Set up PostgreSQL user 'root'; 'root' has special privileges. Create user
+# 'root' in order to avoid having to 'sudo su - postgres' when operating inside
+# Docker container.
+RUN service postgresql start && \
+    sudo -u postgres psql -c "CREATE ROLE root SUPERUSER;" && \
+    sudo -u postgres psql -c "ALTER ROLE root WITH LOGIN;" && \
+    sudo -u postgres psql -c "CREATE DATABASE root;"
+
+# Set up PostgreSQL user 'yingw787', for operating in PostgreSQL when outside
+# Docker container.
+RUN service postgresql start && \
+    sudo -u postgres psql -c "CREATE ROLE yingw787 SUPERUSER;" && \
+    # sudo -u postgres psql -c "CREATE USER yingw787;" && \
+    # sudo -u postgres psql -c "GRANT ROOT TO yingw787;" && \
+    sudo -u postgres psql -c "ALTER ROLE yingw787 WITH LOGIN;" && \
+    sudo -u postgres psql -c "CREATE DATABASE yingw787;"
+
 ENTRYPOINT [ "/app/entrypoint.sh" ]
