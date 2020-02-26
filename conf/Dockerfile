@@ -71,13 +71,4 @@ RUN service postgresql start && \
     sudo -u postgres psql -c "ALTER ROLE root WITH LOGIN;" && \
     sudo -u postgres psql -c "CREATE DATABASE root;"
 
-# Set up PostgreSQL user 'yingw787', for operating in PostgreSQL when outside
-# Docker container.
-RUN service postgresql start && \
-    sudo -u postgres psql -c "CREATE ROLE yingw787 SUPERUSER;" && \
-    # sudo -u postgres psql -c "CREATE USER yingw787;" && \
-    # sudo -u postgres psql -c "GRANT ROOT TO yingw787;" && \
-    sudo -u postgres psql -c "ALTER ROLE yingw787 WITH LOGIN;" && \
-    sudo -u postgres psql -c "CREATE DATABASE yingw787;"
-
 ENTRYPOINT [ "/app/entrypoint.sh" ]
