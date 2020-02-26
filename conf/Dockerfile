@@ -71,4 +71,11 @@ RUN service postgresql start && \
     sudo -u postgres psql -c "ALTER ROLE root WITH LOGIN;" && \
     sudo -u postgres psql -c "CREATE DATABASE root;"
 
+# Setup tutorial-specific tables.
+RUN service postgresql start && \
+    sudo -u postgres psql -c "CREATE DATABASE flask_jwt_auth;" && \
+    sudo -u postgres psql -c "CREATE DATABASE flask_jwt_auth_test;"
+
+ENV APP_SETTINGS='project.server.config.DevelopmentConfig'
+
 ENTRYPOINT [ "/app/entrypoint.sh" ]
