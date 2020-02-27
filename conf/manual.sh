@@ -3,6 +3,11 @@
 # Work that should be manually run by the user within the Docker environment,
 # for one reason or another.
 
+export PGPASSWORD=postgres
+
+# Remove directory migrations before re-creating it to avoid errors.
+rm -rf /root/migrations
+
 # This section of code apparently needs to be run manually, not sure why it
 # doesn't work while scripted but I copied and pasted this into the Docker
 # context and the PostgreSQL instance migrated successfully.
