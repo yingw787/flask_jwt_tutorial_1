@@ -18,6 +18,9 @@ Tutorial: https://realpython.com/token-based-authentication-with-flask/
     /root/env/bin/activate`.
 
 -   In order to access the live PostgreSQL container from the host, run command
-    `PGPASSWORD=postgres psql -h localhost -U postgres`. Cannot just use `psql`
+    `psql -h localhost -U postgres`. Cannot just use `psql`
     since Docker container bridges over network, and doesn't have local
     `/var/run/postgresql/.s.PGSQL.$PORT`.
+
+-   In order to run tests for the Python API, run command `source /app/manual.sh
+    && python3 /root/manage.py test`.
