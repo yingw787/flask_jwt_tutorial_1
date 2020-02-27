@@ -3,3 +3,5 @@
 src/.bash_history
 src/.psql_history
 src/.python_history
+
+__pycache__
