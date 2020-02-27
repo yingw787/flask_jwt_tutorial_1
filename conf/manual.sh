@@ -10,3 +10,11 @@
     PGPASSWORD=postgres python3 /root/manage.py create_db || true && \
     PGPASSWORD=postgres python3 /root/manage.py db init || true && \
     PGPASSWORD=postgres python3 /root/manage.py db migrate
+
+# Generate the server-side secret key, save to file, and export as env variable.
+#
+# This should be random, and only accessible server-side.
+. /root/env/bin/activate && \
+    python3 -c 'from base64 import b64encode; from os import urandom; random_bytes = urandom(64); token = b64encode(random_bytes).decode("utf-8"); print(token)' >> /tmp/secret.txt
+echo 'Created secret key saved at /tmp/secret.txt'
+export SECRET_KEY=$(cat /tmp/secret.txt)
