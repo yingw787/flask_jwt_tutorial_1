@@ -9,7 +9,8 @@ Tutorial: https://realpython.com/token-based-authentication-with-flask/
 2.  Move into Docker container environment by running `docker exec -it
     flask_jwt_tutorial_1 bash`.
 
-3.  Run `bash /app/manual.sh` to run manual steps within Docker container.
+3.  Run `source /app/manual.sh` to run manual steps within Docker container and
+    merge parent/child `bash` contexts.
 
 ## Other steps
 
