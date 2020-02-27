@@ -96,6 +96,24 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)
 
+    def test_non_registered_user_login(self):
+        """
+        Test for login of non-registered user
+        """
+        with self.client:
+            response = self.client.post(
+                '/auth/login',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'User does not exist.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 404)
 
 
 if __name__=='__main__':
