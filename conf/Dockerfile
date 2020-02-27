@@ -51,11 +51,6 @@ RUN apt-get install -y python3-venv
 # in this directory.
 COPY requirements.txt /root
 
-RUN python3.6 -m venv ${HOME}/env && \
-    . ${HOME}/env/bin/activate && \
-    pip3 install wheel && \
-    pip3 install -r /root/requirements.txt
-
 # Configure PostgreSQL. Copied from 'github.com/yingw787/tinydevcrm-mvp'.
 # Comments have been truncated.
 RUN apt-get install -y sudo
@@ -77,5 +72,7 @@ RUN service postgresql start && \
     sudo -u postgres psql -c "CREATE DATABASE flask_jwt_auth_test;"
 
 ENV APP_SETTINGS='project.server.config.DevelopmentConfig'
+
+WORKDIR /root
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
