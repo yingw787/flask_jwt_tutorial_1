@@ -307,6 +307,38 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(data['message'] == 'Token blacklisted. Please log in again.')
             self.assertEqual(response.status_code, 401)
 
+    def test_valid_blacklisted_token_user(self):
+        """
+        Test for user status with a blacklisted valid token
+        """
+        with self.client:
+            resp_register = self.client.post(
+                '/auth/register',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            # blacklist a valid token
+            blacklist_token = BlacklistToken(
+                token=json.loads(resp_register.data.decode())['auth_token']
+            )
+            db.session.add(blacklist_token)
+            db.session.commit()
+            response = self.client.get(
+                '/auth/status',
+                headers=dict(
+                    Authorization='Bearer ' + json.loads(
+                        resp_register.data.decode()
+                    )['auth_token']
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Token blacklisted. Please log in again.')
+            self.assertEqual(response.status_code, 401)
+
 
 if __name__=='__main__':
     unittest.main()
